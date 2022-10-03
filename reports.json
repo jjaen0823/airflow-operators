@@ -1,0 +1,27 @@
+{
+    "ingestionStatsAndErrors": {
+        "taskId": "index_parallel_timestamp_format_test_ppafalpj_2022-09-21T08:03:32.969Z",
+        "payload": {
+            "ingestionState": "COMPLETED",
+            "unparseableEvents": {},
+            "rowStats": {
+                "determinePartitions": {
+                    "processed": 5000,
+                    "processedWithError": 0,
+                    "thrownAway": 0,
+                    "unparseable": 0
+                },
+                "buildSegments": {
+                    "processed": 5000,
+                    "processedWithError": 0,
+                    "thrownAway": 0,
+                    "unparseable": 0
+                }
+            },
+            "errorMsg": null,
+            "segmentAvailabilityConfirmed": false,
+            "segmentAvailabilityWaitTimeMs": 0
+        },
+        "type": "ingestionStatsAndErrors"
+    }
+}
