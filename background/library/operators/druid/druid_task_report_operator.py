@@ -47,7 +47,7 @@ class CustomDruidTaskReportOperator(BaseOperator):
             druid_conn_id: str = 'druid_ingest_default',
             **kwargs: Any,
     ) -> None:
-        super().__init__(trigger_rule=TriggerRule.ALWAYS, **kwargs)
+        super().__init__(trigger_rule=TriggerRule.ALL_DONE, **kwargs)
         self.conn_id = druid_conn_id
 
     def execute(self, context: "Context") -> None:
