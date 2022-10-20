@@ -3,11 +3,16 @@ import os
 from datetime import timedelta
 import pendulum
 
-from airflow import DAG
+from airflow import DAG, AirflowException
 from airflow.operators.python import PythonOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.utils.trigger_rule import TriggerRule
+
 from background.library.operators.druid.druid_operator import CustomDruidOperator
 from background.library.operators.druid.druid_task_report_operator import CustomDruidTaskReportOperator
 
+def watcher():
+    raise AirflowException("Failing task because one or more upstream tasks failed.")
 
 def fn_change_intervals(spec: dict, **kwargs):
     try:
@@ -36,7 +41,6 @@ def fn_change_intervals(spec: dict, **kwargs):
 arguments_file_path = f"{os.path.dirname(os.path.realpath(__file__))}/arguments.json"
 with open(arguments_file_path, "r") as file:
     args = json.load(file)
-
 
 # change start_date(str) to datetime
 args["default_args"]["start_date"] = pendulum.parse(args["default_args"]["start_date"])
@@ -75,6 +79,15 @@ with DAG(
         druid_conn_id=dag.user_defined_macros["druid_ingest_conn_id"]
     )
 
+    failed_task_watcher = PythonOperator(
+        task_id="failed_task_watcher",
+        python_callable=watcher,
+        trigger_rule=TriggerRule.ONE_FAILED,
+        retries=0
+    )
+
     [] >> change_intervals
     [change_intervals] >> druid_ingest_operator
     [druid_ingest_operator] >> druid_task_report_operator
+
+    [change_intervals, druid_ingest_operator] >> failed_task_watcher
