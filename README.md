@@ -17,10 +17,15 @@
 
 
 ## 3. 구현
+### 3.1 DruidOperator, DruidHook
   - DruidOperator, DruidHook 모두 커스터마이징해서 ingestion task id를 airflow의 XCom으로 푸쉬하도록 변경한다.
   - CustomDruidOperator와 CustomDruidHook은 기존 airflow DruidOperator, DruidHook를 상속 받아 변경 해야 하는 메소드만 오버라이딩하거나 필요한 메소드를 추가한다.
     - CustomDruidHook에 druid ingestion task 리포트를 반환하는 메소드인 get_task_report를 추가한다.
   - CustomTaskReportOperator는 execute 메소드에서 CustomDruidHook의 get_task_report 메소드를 호출한다.
+### 3.2 Task Watcher
+  - druid_task_report는 druid_ingest가 실피해도 에러 메시지를 반환하기 때문에 DAGRUN이 SUCCESS 되는 문제가 발생했다.
+  - task_failed_watcher라는 task를 추가해 change_intervals, druid_ingest 둘 중 하나의 task만 실패해도 DAGRUN이 실패하도록 trigger rule을 ONE_FAILED로 설정해주었다.
+    [cc.airflow trigger rule](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html#example-of-watcher-pattern-with-trigger-rules)
 
 ## 4. 테스트
 - XCom으로 druid task id, status 추가
