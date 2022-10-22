@@ -1,20 +1,20 @@
 import json
 import os
-from datetime import timedelta
 import pendulum
 
 from airflow import DAG, AirflowException
 from airflow.operators.python import PythonOperator
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.utils.trigger_rule import TriggerRule
 
-from background.library.operators.druid.druid_operator import CustomDruidOperator
-from background.library.operators.druid.druid_task_report_operator import CustomDruidTaskReportOperator
+from library.operators.druid.druid_operator import CustomDruidOperator
+from library.operators.druid.druid_task_report_operator import CustomDruidTaskReportOperator
+
 
 def watcher():
     raise AirflowException("Failing task because one or more upstream tasks failed.")
 
-def fn_change_intervals(spec: dict, **kwargs):
+
+def change_intervals(spec: dict, **kwargs):
     try:
         data_interval_start_UTC, data_interval_end_UTC = kwargs['data_interval_start'], kwargs['data_interval_end']
         # TODO timezone 정책 논의
@@ -64,7 +64,7 @@ with DAG(
 
     change_intervals = PythonOperator(
         task_id="change_intervals",
-        python_callable=fn_change_intervals,
+        python_callable=change_intervals,
         op_kwargs={"spec": spec}
     )
 

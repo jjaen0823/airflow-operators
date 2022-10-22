@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING, Any, Optional
 
 from airflow.providers.apache.druid.operators.druid import DruidOperator
 
-from background.library.hooks.druid.druid_hook import CustomDruidHook
+from library.hooks.druid_hook import CustomDruidHook
 
 if TYPE_CHECKING:
     from airflow.utils.context import Context

@@ -21,7 +21,7 @@ from typing import TYPE_CHECKING, Any
 from airflow.models import BaseOperator
 from airflow.utils.trigger_rule import TriggerRule
 
-from background.library.hooks.druid.druid_hook import CustomDruidHook
+from library.hooks.druid_hook import CustomDruidHook
 
 if TYPE_CHECKING:
     from airflow.utils.context import Context
