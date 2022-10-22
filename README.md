@@ -24,7 +24,7 @@
   - CustomTaskReportOperator는 execute 메소드에서 CustomDruidHook의 get_task_report 메소드를 호출한다.
 ### 3.2 Task Watcher
   - druid_task_report는 druid_ingest가 실패해도 에러 메시지를 반환하기 때문에 DAGRUN이 SUCCESS 되는 문제가 발생했다.
-  - task_failed_watcher라는 task를 추가해 change_intervals, druid_ingest 둘 중 하나의 task만 실패해도 DAGRUN이 실패하도록 trigger rule을 ONE_FAILED로 설정해주었다.
+  - failed_task_watcher라는 task를 추가해 change_intervals, druid_ingest 둘 중 하나의 task만 실패해도 DAGRUN이 실패하도록 trigger rule을 ONE_FAILED로 설정해주었다.
     [cc.airflow trigger rule](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html#example-of-watcher-pattern-with-trigger-rules)
 
 ## 4. 테스트
